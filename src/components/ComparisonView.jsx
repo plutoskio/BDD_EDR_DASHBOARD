@@ -5,15 +5,11 @@ import './DataTable.css';
 
 export default function ComparisonView({ edram, competitor, onShowEvidence }) {
   if (!edram || !competitor) return null;
-
-  // We should group rows according to brief: Both disclosed, Only EdRAM, Only Competitor, Both ND
-  // We'll process each section and categorize items
   
   return (
     <div className="comparison-container animate-fade-in">
       {METRICS.map((section) => {
-        
-        let groups = { both: [], edramOnly: [], compOnly: [], none: [] };
+        let comparableRows = [];
         
         section.items.forEach(item => {
           const eData = extractData(edram, item.key, section.isMacro);
@@ -24,15 +20,11 @@ export default function ComparisonView({ edram, competitor, onShowEvidence }) {
           
           const obj = { item, eData, cData };
           
-          if (eValid && cValid) groups.both.push(obj);
-          else if (eValid && !cValid) groups.edramOnly.push(obj);
-          else if (!eValid && cValid) groups.compOnly.push(obj);
-          else groups.none.push(obj);
+          if (eValid && cValid) comparableRows.push(obj);
         });
         
-        // Skip rendering section if it's completely empty in both
-        if (groups.both.length === 0 && groups.edramOnly.length === 0 && groups.compOnly.length === 0) {
-           return null;
+        if (comparableRows.length === 0) {
+          return null;
         }
 
         const renderRow = (obj) => {
@@ -86,15 +78,7 @@ export default function ComparisonView({ edram, competitor, onShowEvidence }) {
               </div>
               
               <div className="data-body">
-                {groups.both.length > 0 && groups.both.map(renderRow)}
-                
-                {groups.edramOnly.length > 0 && groups.edramOnly.map(renderRow)}
-                
-                {groups.compOnly.length > 0 && (
-                  <div className="row-group-label">Only Disclosed by {competitor.manager}</div>
-                )}
-                {groups.compOnly.length > 0 && groups.compOnly.map(renderRow)}
-                
+                {comparableRows.map(renderRow)}
               </div>
             </div>
           </div>
