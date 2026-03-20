@@ -101,7 +101,7 @@ export const MANUAL_CONSENSUS_ALIGNMENT = {
   },
   currencies_eur: {
     bucket: 'blindspot',
-    rationale: 'EdRAM makes EUR strength explicit, while most competitors stop short of publishing a direct EUR stance.',
+    rationale: 'EdRAM expresses euro strength mainly through a weaker-USD and euro-appreciation lens, while most competitors do not publish a clear comparable EUR stance.',
   },
   currencies_em_fx: {
     bucket: 'aligned',

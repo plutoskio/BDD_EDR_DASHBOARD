@@ -12,7 +12,6 @@ export const METRICS = [
       { key: 'eurozone_inflation_2026', label: 'Eurozone Inflation (%)' },
       { key: 'fed_year_end_rate_2026', label: 'Fed Policy Rate (%)' },
       { key: 'ecb_deposit_rate_year_end_2026', label: 'ECB Deposit Rate (%)' },
-      { key: 'eur_usd_2026', label: 'EUR/USD' },
     ]
   },
   { section: 'Equities', 
@@ -43,7 +42,7 @@ export const METRICS = [
     isMacro: false,
     items: [
       { key: 'currencies_usd', label: 'USD' },
-      { key: 'currencies_eur', label: 'EUR' },
+      { key: 'currencies_eur', label: 'EUR / EUR/USD' },
       { key: 'currencies_em_fx', label: 'EM FX' },
       { key: 'commodities_gold', label: 'Gold' },
       { key: 'commodities_oil', label: 'Oil' },
