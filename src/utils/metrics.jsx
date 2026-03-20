@@ -1,3 +1,5 @@
+import { EDRAM_QUOTE_OVERRIDES } from '../data/edramQuoteOverrides';
+
 export const METRICS = [
   { section: 'Macro Forecasts', 
     isMacro: true,
@@ -63,13 +65,17 @@ export function extractData(row, key, isMacro) {
   if (!row) return null;
   const statusKey = isMacro ? `${key}_status` : `${key}_view`;
   let valKey = isMacro ? `${key}_value` : null;
+  const isEdram = row.manager === 'EdRAM';
+  const wording = isEdram && EDRAM_QUOTE_OVERRIDES[key]
+    ? EDRAM_QUOTE_OVERRIDES[key]
+    : (row[`${key}_raw_wording`] || '');
   
   return {
     status: row[statusKey] || 'ND',
     value: isMacro ? row[valKey] : '',
     why: row[`${key}_why`] || '',
     page: row[`${key}_page`] || '',
-    wording: row[`${key}_raw_wording`] || '',
+    wording,
     source_file: row.source_file
   };
 }
