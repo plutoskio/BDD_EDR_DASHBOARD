@@ -84,8 +84,8 @@ export const MANUAL_CONSENSUS_ALIGNMENT = {
     rationale: 'EdRAM is more constructive on high yield than the market consensus, which stays selective to cautious.',
   },
   fixed_income_segment_government_bonds: {
-    bucket: 'aligned',
-    rationale: 'EdRAM’s sovereign caution matches the broader skepticism toward long duration government bonds.',
+    bucket: 'differentiator',
+    rationale: 'EdRAM is outright negative on government bonds, while the disclosed market view is more constructive overall.',
   },
   fixed_income_segment_corporate_bonds: {
     bucket: 'aligned',
