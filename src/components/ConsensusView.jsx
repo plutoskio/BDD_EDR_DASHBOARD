@@ -77,10 +77,11 @@ export default function ConsensusView({ edram, competitors, onShowEvidence }) {
         if (normalizeStatus(eData.status) !== 'nd') {
           const insightData = { section: section.section, item, eData, consensus, isMacro: section.isMacro };
           const manualBucket = MANUAL_CONSENSUS_ALIGNMENT[item.key]?.bucket;
+          const isTrueBlindspot = consensus.coveragePercent < 50;
 
           if (manualBucket === 'differentiator') {
             differentiators.push(insightData);
-          } else if (manualBucket === 'blindspot') {
+          } else if (manualBucket === 'blindspot' && isTrueBlindspot) {
             blindspots.push(insightData);
           } else if (manualBucket === 'aligned') {
             aligned.push(insightData);
@@ -97,6 +98,9 @@ export default function ConsensusView({ edram, competitors, onShowEvidence }) {
   const renderCard = (insight, index) => {
     const { item, eData, consensus, isMacro, section } = insight;
     const aiNarrative = consensusNarratives[item.key];
+    const manualMeta = MANUAL_CONSENSUS_ALIGNMENT[item.key];
+    const isBlindspot = manualMeta?.bucket === 'blindspot';
+    const disclosedCount = `${consensus.coverage}/${consensus.total}`;
     
     return (
       <div key={`${item.key}-${index}`} className="insight-card">
@@ -132,13 +136,32 @@ export default function ConsensusView({ edram, competitors, onShowEvidence }) {
           </div>
           
           <div className="card-side">
-            <span className="side-label border-comp">Market Consensus</span>
-            <div className="value-display" style={{color: getStatusColor(consensus.dominantStance)}}>
-              {isMacro && consensus.consensusValue ? <span className="macro-val">~{consensus.consensusValue}</span> : null}
-              <span className="stance-text">{consensus.dominantStance}</span>
-            </div>
-            {aiNarrative && (
-              <div className="why-preview consensus-narrative">{aiNarrative}</div>
+            <span className="side-label border-comp">{isBlindspot ? 'Peer Disclosure' : 'Market Consensus'}</span>
+            {isBlindspot ? (
+              <>
+                <div className="value-display" style={{color: 'var(--status-nd-text)'}}>
+                  <span className="stance-text">Majority ND</span>
+                </div>
+                <div className="coverage-bar">
+                  <div className="track">
+                    <div className="fill" style={{ width: `${consensus.coveragePercent}%` }} />
+                  </div>
+                  <span>{disclosedCount} disclosed</span>
+                </div>
+                <div className="why-preview consensus-narrative">
+                  Most competitors do not publish a directly comparable view on this metric.
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="value-display" style={{color: getStatusColor(consensus.dominantStance)}}>
+                  {isMacro && consensus.consensusValue ? <span className="macro-val">~{consensus.consensusValue}</span> : null}
+                  <span className="stance-text">{consensus.dominantStance}</span>
+                </div>
+                {aiNarrative && (
+                  <div className="why-preview consensus-narrative">{aiNarrative}</div>
+                )}
+              </>
             )}
           </div>
         </div>
