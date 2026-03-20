@@ -23,8 +23,6 @@ export const EDRAM_QUOTE_OVERRIDES = {
     "Les petites capitalisations europeennes devraient beneficier du recentrage vers une croissance plus domestique, de l'union des marches de capitaux mais aussi d'eventuelles baisses de taux de la BCE.",
   fixed_income_overall:
     "Dans l'univers obligataire, il devient difficile d'envisager davantage de resserrement des spreads tant ils se sont contractes. Nous privilegions ainsi les dettes hybrides financieres et d'entreprises, la dette emergente et enfin les strategies de portage.",
-  fixed_income_credit_quality_investment_grade:
-    "Nous privilegions ainsi les dettes hybrides financieres et d'entreprises, essentiellement dans un univers d'emetteurs Investment Grade, ainsi que la dette emergente, qui devrait profiter de l'assouplissement monetaire de la Fed.",
   fixed_income_credit_quality_high_yield:
     "Le segment High Yield se revele particulierement attractif. Son portage eleve et sa courte duration offrent une marge de securite interessante, meme face a une peu probable vague de defauts en 2026.",
   fixed_income_segment_government_bonds:
