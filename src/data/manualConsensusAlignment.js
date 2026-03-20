@@ -39,10 +39,6 @@ export const MANUAL_CONSENSUS_ALIGNMENT = {
     bucket: 'aligned',
     rationale: 'EdRAM and the market both lean toward an accommodative ECB rather than a renewed hiking bias.',
   },
-  eur_usd_2026: {
-    bucket: 'blindspot',
-    rationale: 'EdRAM provides a clear weaker-USD view, while most competitors do not publish an explicit EUR/USD call.',
-  },
   equities_overall: {
     bucket: 'differentiator',
     rationale: 'EdRAM is more selective and balanced than the market’s broader constructive equity stance.',
