@@ -4,8 +4,8 @@ export const MANUAL_CONSENSUS_ALIGNMENT = {
     rationale: 'EdRAM and the market both expect growth to hold up rather than collapse.',
   },
   us_gdp_2026: {
-    bucket: 'aligned',
-    rationale: 'EdRAM remains cautious on the US cycle, but still sits inside the broader soft-landing consensus.',
+    bucket: 'differentiator',
+    rationale: 'EdRAM describes US growth as sluggish and uncertain, which is more cautious than the market soft-landing consensus around 2% growth.',
   },
   eurozone_gdp_2026: {
     bucket: 'aligned',
