@@ -1,7 +1,13 @@
 import React, { useMemo } from 'react';
 import { METRICS, extractData, getStatusColor } from '../utils/metrics';
 import { Target, Zap, EyeOff, Info } from 'lucide-react';
+import consensusNarratives from '../data/consensus_master.json';
+import { MANUAL_CONSENSUS_ALIGNMENT } from '../data/manualConsensusAlignment';
 import './ConsensusDashboard.css';
+
+function normalizeStatus(status) {
+  return (status || 'ND').toLowerCase().trim();
+}
 
 function computeConsensus(competitors, metricKey, isMacro) {
   let validStances = [];
@@ -53,34 +59,14 @@ function computeConsensus(competitors, metricKey, isMacro) {
   return { coverage, total, coveragePercent, dominantStance, consensusValue };
 }
 
-function getAlignment(edramData, consensus) {
-  if (edramData.status.toLowerCase() === 'nd' || consensus.dominantStance === 'nd') return 'N/A';
-  if (consensus.coverage === 0) return 'Blindspot';
-
-  const es = edramData.status.toLowerCase().trim();
-  const cs = consensus.dominantStance.toLowerCase().trim();
-  
-  if (es === cs) return 'Aligned';
-  
-  const positiveGroup = ['positive', 'overweight', 'long', 'constructive'];
-  const negativeGroup = ['negative', 'underweight', 'short'];
-  
-  if ((positiveGroup.includes(es) && negativeGroup.includes(cs)) || 
-      (negativeGroup.includes(es) && positiveGroup.includes(cs))) {
-    return 'Divergent';
-  }
-  
-  return 'Different';
-}
-
-import consensusNarratives from '../data/consensus_master.json';
-
 export default function ConsensusView({ edram, competitors, onShowEvidence }) {
-  if (!edram || !competitors.length) return null;
-
   const insights = useMemo(() => {
+    if (!edram || !competitors.length) {
+      return { aligned: [], differentiators: [], blindspots: [] };
+    }
+
     let aligned = [];
-    let divergent = [];
+    let differentiators = [];
     let blindspots = [];
 
     METRICS.forEach(section => {
@@ -88,23 +74,25 @@ export default function ConsensusView({ edram, competitors, onShowEvidence }) {
         const eData = extractData(edram, item.key, section.isMacro);
         const consensus = computeConsensus(competitors, item.key, section.isMacro);
         
-        if (eData.status.toLowerCase() !== 'nd') {
-          const alignment = getAlignment(eData, consensus);
+        if (normalizeStatus(eData.status) !== 'nd') {
           const insightData = { section: section.section, item, eData, consensus, isMacro: section.isMacro };
+          const manualBucket = MANUAL_CONSENSUS_ALIGNMENT[item.key]?.bucket;
 
-          if (consensus.coveragePercent < 30) {
+          if (manualBucket === 'differentiator') {
+            differentiators.push(insightData);
+          } else if (manualBucket === 'blindspot') {
             blindspots.push(insightData);
-          } else if (alignment === 'Divergent' || alignment === 'Different') {
-            divergent.push(insightData);
-          } else if (alignment === 'Aligned') {
+          } else if (manualBucket === 'aligned') {
             aligned.push(insightData);
           }
         }
       });
     });
 
-    return { aligned, divergent, blindspots };
+    return { aligned, differentiators, blindspots };
   }, [edram, competitors]);
+
+  if (!edram || !competitors.length) return null;
 
   const renderCard = (insight, index) => {
     const { item, eData, consensus, isMacro, section } = insight;
@@ -161,17 +149,17 @@ export default function ConsensusView({ edram, competitors, onShowEvidence }) {
   return (
     <div className="consensus-dashboard animate-fade-in">
       
-      {insights.divergent.length > 0 && (
+      {insights.differentiators.length > 0 && (
         <section className="insight-section">
           <header className="section-head">
             <div className="icon-wrapper bg-divergent"><Zap size={18} /></div>
             <div>
-              <h3>Key Differentiators</h3>
-              <p>Where EdRAM's outlook diverges significantly from the market consensus.</p>
+              <h3>Not Aligned With Consensus</h3>
+              <p>Manual analyst attribution of the few areas where EdRAM does not line up with the broader market view.</p>
             </div>
           </header>
           <div className="card-grid">
-            {insights.divergent.map(renderCard)}
+            {insights.differentiators.map(renderCard)}
           </div>
         </section>
       )}
@@ -181,8 +169,8 @@ export default function ConsensusView({ edram, competitors, onShowEvidence }) {
           <header className="section-head">
             <div className="icon-wrapper bg-aligned"><Target size={18} /></div>
             <div>
-              <h3>Strong Alignment</h3>
-              <p>Core themes where EdRAM is perfectly aligned with the broader market consensus.</p>
+              <h3>Aligned With Consensus</h3>
+              <p>Manual analyst attribution of the market-consensus areas that are broadly consistent with EdRAM's view.</p>
             </div>
           </header>
           <div className="card-grid">

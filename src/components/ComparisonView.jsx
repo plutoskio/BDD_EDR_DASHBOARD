@@ -1,6 +1,6 @@
 import React from 'react';
-import { METRICS, extractData, formatValueDisplay, getStatusColor } from '../utils/metrics';
-import { Info, HelpCircle } from 'lucide-react';
+import { METRICS, extractData, formatValueDisplay } from '../utils/metrics';
+import { Info } from 'lucide-react';
 import './DataTable.css';
 
 export default function ComparisonView({ edram, competitor, onShowEvidence }) {
@@ -35,7 +35,7 @@ export default function ComparisonView({ edram, competitor, onShowEvidence }) {
            return null;
         }
 
-        const renderRow = (obj, idx) => {
+        const renderRow = (obj) => {
           const { item, eData, cData } = obj;
           
           return (
